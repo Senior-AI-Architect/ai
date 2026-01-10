@@ -62,11 +62,11 @@ def scan_and_clean(raw_input):
 
 # --- 4. INTERFACE ---
 st.title("🤖 Agent Swarm OS")
-st.markdown("<p style='color: #64748b; margin-top:-15px;'>Forensic-Scanned Autonomous Orchestration</p>", unsafe_allow_html=True)
+st.markdown("<p style='color: #64748b; margin-top:-15px;'> Autonomous Orchestration</p>", unsafe_allow_html=True)
 
-objective = st.text_input("🎯 Define Objective", placeholder="e.g., iPhone 16 Market Strategy")
+objective = st.text_input("🎯 Define Objective", placeholder="Swarm search ")
 
-if st.button("🚀 EXECUTE SYSTEM"):
+if st.button("EXECUTE SYSTEM"):
     try:
         # Senior Level LLM Config
         llm = ChatOpenAI(model_name="gpt-4o-mini", temperature=0.2)
@@ -116,3 +116,4 @@ if st.button("🚀 EXECUTE SYSTEM"):
 
     except Exception as e:
         st.error(f"Scan Error: {str(e)}")
+
