@@ -3,102 +3,107 @@ import os
 from crewai import Agent, Task, Crew, Process
 from langchain_openai import ChatOpenAI
 
-# --- 1. PAGE CONFIGURATION (FULL WIDTH) ---
+# --- 1. SYSTEM CONFIGURATION ---
 st.set_page_config(
-    page_title="AI Swarm OS", 
-    page_icon="🤖", 
-    layout="wide", # Isse text ko poori jagah milegi
-    initial_sidebar_state="collapsed"
+    page_title="AI Swarm OS | Senior AI Project", 
+    page_icon="🦾", 
+    layout="wide"
 )
 
-# Key Management (Streamlit Cloud Secrets use karein ya yahan paste karein)
+# Key Management - Professional approach using Secrets
 if "OPENAI_API_KEY" in st.secrets:
     os.environ["OPENAI_API_KEY"] = st.secrets["OPENAI_API_KEY"]
 else:
-    # Testing ke liye agar key code mein dalni ho:
-    os.environ["OPENAI_API_KEY"] = "sk-proj-YOUR_ACTUAL_KEY_HERE"
+    # Fallback for local testing
+    os.environ["OPENAI_API_KEY"] = "sk-proj-YOUR_API_KEY"
 
-# --- 2. SUPER-FAST UI STYLING ---
+# --- 2. ADVANCED UI STYLING (Senior UI/UX) ---
 st.markdown("""
     <style>
-    /* Full Width Fix */
-    .block-container {
-        max-width: 98% !important;
-        padding-top: 1rem;
-        padding-left: 2rem;
-        padding-right: 2rem;
+    .report-container {
+        background-color: #0d1117;
+        padding: 30px;
+        border-radius: 15px;
+        border-left: 5px solid #00f2ff;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        color: #c9d1d9;
+        line-height: 1.8;
     }
-    /* Text Wrap Fix taake adha nazar na aaye */
-    .report-box {
-        background-color: #050b14;
-        color: #e6f1ff;
-        padding: 25px;
-        border-radius: 12px;
-        border: 1px dashed #00f2ff;
-        line-height: 1.6;
-        word-wrap: break-word;
-        white-space: pre-wrap;
-        font-family: 'Inter', sans-serif;
-    }
-    .stButton>button {
-        width: 100%;
-        background: linear-gradient(90deg, #0891b2, #06b6d4);
-        color: white;
-        border: none;
-        padding: 12px;
-        font-weight: bold;
+    .stTextInput>div>div>input {
+        background-color: #161b22;
+        color: #58a6ff;
+        border: 1px solid #30363d;
     }
     </style>
     """, unsafe_allow_html=True)
 
-st.title("🤖 [PROJECT_BETA]: AGENT_SWARM_OS")
+# --- 3. MAIN INTERFACE ---
+st.title("🦾 [PROJECT_BETA]: AGENT_SWARM_OS")
+st.subheader("Autonomous Orchestration of Specialized AI Agents")
 st.write("---")
 
-# --- 3. INPUT ---
-topic = st.text_input("SYSTEM OBJECTIVE:", value="AI Agents Efficiency 2026")
+# User Input for Objective
+objective = st.text_input("🎯 DEFINE SYSTEM OBJECTIVE:", placeholder="e.g., Scalable Microservices Architecture 2026")
 
-if st.button("🚀 EXECUTE SWARM"):
-    try:
-        # GPT-4o-mini extreme speed ke liye best hai
-        llm = ChatOpenAI(model_name="gpt-4o-mini", temperature=0.5)
+if st.button("🚀 INITIATE COLLABORATION"):
+    if not os.environ.get("OPENAI_API_KEY") or "YOUR_API_KEY" in os.environ["OPENAI_API_KEY"]:
+        st.error("❌ CRITICAL: OpenAI API Key is missing or invalid.")
+    else:
+        try:
+            # Initialize LLM - GPT-4o-mini for speed and high logic
+            llm = ChatOpenAI(model_name="gpt-4o-mini", temperature=0.3)
 
-        # Agent 1: Fast Analyst
-        analyst = Agent(
-            role='Neural Analyst',
-            goal=f'Summarize core breakthroughs for {topic}',
-            backstory="High-speed data synthesis engine.",
-            llm=llm,
-            verbose=True,
-            allow_delegation=False
-        )
-
-        # Agent 2: Precision Architect
-        architect = Agent(
-            role='System Architect',
-            goal=f'Create a technical roadmap for {topic}',
-            backstory="Master of system logical structures.",
-            llm=llm,
-            verbose=True,
-            allow_delegation=False
-        )
-
-        # Tasks
-        t1 = Task(description=f"Quick 3 insights for {topic}.", agent=analyst, expected_output="3 bullet points.")
-        t2 = Task(description="Brief 6-month roadmap.", agent=architect, expected_output="Markdown roadmap.")
-
-        # Swarm Execution
-        with st.status("⚡ COLLABORATING (STAY TUNED)...", expanded=True) as status:
-            swarm = Crew(
-                agents=[analyst, architect], 
-                tasks=[t1, t2], 
-                process=Process.sequential
+            # AGENT 1: The Domain Specialist (Focused Intelligence)
+            analyst = Agent(
+                role='Principal Strategy Analyst',
+                goal=f'Synthesize high-level technical requirements for {objective}',
+                backstory="Senior technical strategist with 20 years of experience in system forecasting.",
+                llm=llm,
+                verbose=True,
+                allow_delegation=False # Performance optimization: prevents unnecessary loops
             )
-            result = swarm.kickoff()
-            status.update(label="✅ TASK COMPLETED!", state="complete")
 
-        # --- 4. OUTPUT (WRAPPER TO PREVENT TEXT CUTTING) ---
-        st.subheader("📡 AGENT OUTPUT REPORT:")
-        st.markdown(f'<div class="report-box">{result}</div>', unsafe_allow_html=True)
+            # AGENT 2: The Implementation Architect (Structure Expert)
+            architect = Agent(
+                role='Lead Solutions Architect',
+                goal=f'Convert strategic findings into a technical execution blueprint for {objective}',
+                backstory="Expert in converting abstract concepts into structured, scalable system architectures.",
+                llm=llm,
+                verbose=True,
+                allow_delegation=False
+            )
 
-    except Exception as e:
-        st.error(f"❌ SYSTEM ERROR: {str(e)}")
+            # TASK 1: Analysis Phase
+            analysis_task = Task(
+                description=f"Perform a deep-dive analysis into {objective}. Identify 3 core architectural pillars.",
+                agent=analyst,
+                expected_output="A structured list of 3 strategic technical insights."
+            )
+
+            # TASK 2: Blueprinting Phase
+            blueprint_task = Task(
+                description=f"Design a 12-month technical roadmap and high-level architecture based on the analysis.",
+                agent=architect,
+                expected_output="A comprehensive Markdown technical roadmap with milestones."
+            )
+
+            # EXECUTION: Sequential Orchestration
+            with st.status("🛠️ Swarm Active: Agents are reasoning...", expanded=True) as status:
+                st.write("📡 Analyst is processing objective...")
+                crew = Crew(
+                    agents=[analyst, architect], 
+                    tasks=[analysis_task, blueprint_task], 
+                    process=Process.sequential # Ensures logical flow from research to design
+                )
+                final_intelligence = crew.kickoff()
+                status.update(label="✅ Collaboration Successful!", state="complete")
+
+            # --- 4. OUTPUT DISPLAY ---
+            st.markdown("### 📡 SYSTEM INTELLIGENCE REPORT")
+            st.markdown(f'<div class="report-container">{final_intelligence}</div>', unsafe_allow_html=True)
+
+        except Exception as e:
+            st.error(f"⚠️ Orchestration Failed: {str(e)}")
+
+else:
+    st.info("System Idle. Enter an objective and initiate swarm to begin.")
