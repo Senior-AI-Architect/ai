@@ -1,3 +1,7 @@
+# In imports (Line 5 approx)
+from langchain_community.tools import DuckDuckGoSearchRun
+# Jab tool initialize karein:
+search_tool = DuckDuckGoSearchRun()
 import streamlit as st
 import os
 from crewai import Agent, Task, Crew, Process
@@ -61,3 +65,4 @@ if st.button("Initialize Swarm"):
         # Result Display
         st.subheader("Final Output")
         st.markdown(result)
+
