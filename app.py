@@ -3,162 +3,128 @@ import os
 from crewai import Agent, Task, Crew, Process
 from langchain_openai import ChatOpenAI
 
-# --- 1. GLOBAL SYSTEM CONFIGURATION ---
+# --- 1. SYSTEM CORE CONFIGURATION ---
 st.set_page_config(
-    page_title="Agent Swarm OS | Enterprise AI",
+    page_title="Agent Swarm OS | Professional Edition",
     page_icon="🤖",
-    layout="wide",
-    initial_sidebar_state="collapsed"
+    layout="wide"
 )
 
-# Key Management - Secure Public Repo Practice
+# API Key Management (Security-First)
 if "OPENAI_API_KEY" in st.secrets:
     os.environ["OPENAI_API_KEY"] = st.secrets["OPENAI_API_KEY"]
 else:
-    # Recruiter ko batane ke liye ke logic security-first hai
-    os.environ["OPENAI_API_KEY"] = "PASTE_KEY_HERE_FOR_LOCAL_TESTING"
+    # Testing fallback
+    os.environ["OPENAI_API_KEY"] = "sk-proj-PASTE_YOUR_KEY_HERE"
 
-# --- 2. RESPONSIVE FRONT-END ARCHITECTURE (CSS3) ---
+# --- 2. ELITE COMPACT UI (CSS3) ---
 st.markdown("""
     <style>
-    /* Professional Google-style Sans Font */
-    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600&display=swap');
     
-    html, body, [class*="css"] {
-        font-family: 'Plus Jakarta Sans', sans-serif;
-        background-color: #ffffff;
-    }
+    html, body, [class*="css"] { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #ffffff; }
 
-    /* Full-width Responsive Container */
-    .report-container {
+    /* Compact Report Container */
+    .report-card {
         background-color: #ffffff;
         border: 1px solid #e2e8f0;
-        border-radius: 16px;
-        padding: 40px;
-        margin-top: 25px;
+        border-radius: 12px;
+        padding: 24px 32px;
+        margin-top: 10px;
         color: #1e293b;
-        line-height: 1.8;
-        box-shadow: 0 4px 15px rgba(0,0,0,0.02);
+        line-height: 1.5 !important; /* Compact spacing for professional look */
         word-wrap: break-word;
         white-space: pre-wrap;
+        box-shadow: 0 1px 2px rgba(0,0,0,0.05);
     }
 
-    /* Senior Dashboard Header */
-    .main-title {
-        font-size: 2.8rem;
-        font-weight: 600;
-        background: linear-gradient(90deg, #0f172a, #334155);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        letter-spacing: -1px;
-    }
-
-    /* Status Pulse Animation */
-    .agent-status {
-        padding: 12px 20px;
-        background: #f1f5f9;
-        border-radius: 10px;
-        border-left: 4px solid #2563eb;
-        color: #475569;
-        font-size: 0.95rem;
-        margin-bottom: 10px;
-    }
-
+    /* Headings Spacing Fix */
+    h1, h2, h3 { margin-bottom: 8px !important; margin-top: 15px !important; }
+    
+    /* Action Button */
     .stButton>button {
         background-color: #0f172a;
         color: white;
-        border-radius: 10px;
-        padding: 15px;
+        border-radius: 8px;
+        padding: 12px;
         font-weight: 600;
-        border: none;
         width: 100%;
-        transition: all 0.3s ease;
+        transition: 0.2s;
     }
-    .stButton>button:hover {
-        background-color: #1e293b;
-        transform: translateY(-2px);
-    }
+    .stButton>button:hover { background-color: #1e293b; border: none; }
+
+    /* Custom Scrollbar for better UX */
+    ::-webkit-scrollbar { width: 8px; }
+    ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
     </style>
     """, unsafe_allow_html=True)
 
-# --- 3. UI LAYOUT ---
-st.markdown('<h1 class="main-title">Agent Swarm OS</h1>', unsafe_allow_html=True)
-st.markdown('<p style="color: #64748b; font-size: 1.1rem; margin-bottom: 2rem;">Production-grade Multi-Agent Orchestration for Technical Intelligence.</p>', unsafe_allow_html=True)
+# --- 3. DASHBOARD INTERFACE ---
+st.markdown('<h1 style="font-size: 2.2rem; color: #0f172a;">Agent Swarm OS</h1>', unsafe_allow_html=True)
+st.markdown('<p style="color: #64748b; margin-top: -10px;">Production-ready Multi-Agent Orchestration for Technical Intelligence.</p>', unsafe_allow_html=True)
 
-# Main Dashboard Input Area
-with st.container():
-    objective = st.text_input("🎯 Define Swarm Objective", placeholder="e.g., Enterprise Blockchain Architecture 2026", help="Define the technical goal for the agentic swarm.")
-    
-    col1, col2, col3 = st.columns([1,1,1])
-    with col2:
-        run_btn = st.button("🚀 EXECUTE NEURAL SWARM")
+# Input Layout
+objective = st.text_input("🎯 Define Swarm Objective", placeholder="e.g., Scalable E-commerce Architecture 2026")
 
-# --- 4. BACKEND REASONING ENGINE ---
-if run_btn:
-    if "PASTE_KEY" in os.environ["OPENAI_API_KEY"]:
-        st.warning("⚠️ Security Alert: OpenAI API Key not detected in environment.")
+if st.button("🚀 INITIATE NEURAL SWARM"):
+    if not os.environ.get("OPENAI_API_KEY") or "PASTE_YOUR_KEY" in os.environ["OPENAI_API_KEY"]:
+        st.error("Invalid API Configuration. Please verify environment secrets.")
     else:
         try:
-            # High-Logic Model for Senior Reasoning
-            llm = ChatOpenAI(model_name="gpt-4o-mini", temperature=0.3)
+            # High-Reasoning LLM
+            llm = ChatOpenAI(model_name="gpt-4o-mini", temperature=0.2)
 
-            # Agent 1: Senior Research Entity
+            # Agent 1: The Researcher (Logic First)
             researcher = Agent(
-                role='Strategic Research Director',
-                goal=f'Conduct a multi-dimensional analysis of {objective}',
-                backstory="Expert in identifying high-impact technical trends and infrastructure shifts.",
+                role='Strategic Technology Analyst',
+                goal=f'Perform a deep-dive analysis into {objective}',
+                backstory="Ex-Meta Infrastructure Analyst specialized in identifying system bottlenecks and trends.",
                 llm=llm,
                 verbose=True,
-                allow_delegation=False # Efficiency Control
+                allow_delegation=False # Performance optimization
             )
 
-            # Agent 2: Solutions Architect
+            # Agent 2: The Architect (Structural Expert)
             architect = Agent(
                 role='Principal Solutions Architect',
-                goal=f'Synthesize research into a 12-month execution blueprint for {objective}',
-                backstory="Specialized in building scalable, modular, and future-proof system designs.",
+                goal=f'Convert analytical insights into a professional 12-month blueprint for {objective}',
+                backstory="Senior Architect focused on modular design and high-availability system mapping.",
                 llm=llm,
                 verbose=True,
                 allow_delegation=False
             )
 
-            # Define Modular Tasks
+            # Define Sequential Tasks
             t1 = Task(
-                description=f"Analyze {objective}. Extract top 3 architectural pillars and potential risks.",
+                description=f"Analyze {objective}. Identify 3 critical architectural pillars and potential risks.",
                 agent=researcher,
-                expected_output="A structured list of 3 strategic insights with risk assessments."
+                expected_output="A structured list of 3 strategic insights."
             )
             t2 = Task(
-                description="Create a comprehensive technical roadmap with quarterly milestones.",
+                description="Draft a 12-month technical roadmap with quarterly milestones.",
                 agent=architect,
-                expected_output="A professional technical roadmap formatted in Markdown."
+                expected_output="A comprehensive Markdown roadmap."
             )
 
-            # --- 5. EXECUTION & LOGGING ---
-            with st.status("🧠 Swarm Intelligence in Progress...", expanded=True) as status:
-                st.markdown('<div class="agent-status">📡 Phase 1: Director is evaluating technical constraints...</div>', unsafe_allow_html=True)
+            # --- 4. BACKEND ORCHESTRATION ---
+            with st.status("🧠 Swarm reasoning in progress...", expanded=True) as status:
+                st.write("📡 Phase 1: Strategic Lead is analyzing core objective...")
                 
-                # Orchestrate the Crew
                 crew = Crew(
                     agents=[researcher, architect],
                     tasks=[t1, t2],
-                    process=Process.sequential # Ensures logical handover
+                    process=Process.sequential # Logical Handover
                 )
                 
-                output = crew.kickoff()
-                
-                st.markdown('<div class="agent-status">🏗️ Phase 2: Architect is mapping strategic goals to milestones...</div>', unsafe_allow_html=True)
-                status.update(label="✅ Swarm Collaboration Finalized", state="complete")
+                final_report = crew.kickoff()
+                status.update(label="✅ Swarm Intelligence Generated", state="complete")
 
-            # --- 6. READABLE FINAL REPORT ---
-            st.markdown("### 📡 Final Intelligence Output")
-            st.markdown(f'<div class="report-container">{output}</div>', unsafe_allow_html=True)
+            # --- 5. OUTPUT DISPLAY ---
+            st.markdown("### 📡 Intelligence Report")
+            # Text wrapping wrapper
+            st.markdown(f'<div class="report-card">{final_report}</div>', unsafe_allow_html=True)
             
-            # Professional Disclosure
-            st.caption("Architecture Note: This output is the result of a sequential reasoning loop between two specialized agents to ensure technical depth.")
+            st.caption("Note: This autonomous intelligence was generated using a sequential multi-agent reasoning loop.")
 
         except Exception as e:
-            st.error(f"Execution Error: {str(e)}")
-
-else:
-    st.info("System is standby. Awaiting objective initialization.")
+            st.error(f"System Critical Error: {str(e)}")
