@@ -3,61 +3,62 @@ import os
 from crewai import Agent, Task, Crew, Process
 from langchain_openai import ChatOpenAI
 
-# --- CONFIGURATION ---
-# Apni BILKUL SAHI key yahan single quotes ke andar paste karein
-os.environ["OPENAI_API_KEY"] = "PASTE_YOUR_CORRECT_KEY_HERE"
-
+# --- 1. CONFIGURATION ---
 st.set_page_config(page_title="AI Swarm OS", page_icon="🤖", layout="wide")
 
-# Futuristic UI
+# UI Design
 st.markdown("""
     <style>
-    .main { background-color: #050b14; color: #00f2ff; font-family: 'Courier New', monospace; }
-    .stTextInput>div>div>input { background-color: #0a192f; color: #00f2ff; border: 1px solid #00f2ff; }
-    .stButton>button { background: linear-gradient(45deg, #0891b2, #06b6d4); color: white; font-weight: bold; border-radius: 5px; }
+    .main { background-color: #050b14; color: #00f2ff; font-family: 'monospace'; }
+    .stButton>button { width: 100%; background: #0891b2; color: white; border-radius: 5px; border: none; }
     </style>
     """, unsafe_allow_html=True)
+
+# Key Management (Streamlit Cloud Secrets)
+if "OPENAI_API_KEY" in st.secrets:
+    os.environ["OPENAI_API_KEY"] = st.secrets["OPENAI_API_KEY"]
+else:
+    st.error("❌ API Key Missing: Please add 'OPENAI_API_KEY' in Streamlit Cloud Secrets.")
+    st.stop()
 
 st.title("🤖 [PROJECT_BETA]: AGENT_SWARM_OS")
 st.write("---")
 
-# Input Objective
-topic = st.text_input("ENTER SYSTEM OBJECTIVE:", value="Advanced Multi-Agent Collaboration 2026")
+# Input
+topic = st.text_input("SYSTEM OBJECTIVE:", value="AI Agents Efficiency 2026")
 
 if st.button("EXECUTE SWARM"):
     try:
-        # GPT-4o-mini extreme speed ke liye
+        # LLM Initialization (Fastest Model)
         llm = ChatOpenAI(model_name="gpt-4o-mini", temperature=0.7)
 
-        # AGENTS (Using internal knowledge for speed)
-        researcher = Agent(
+        # Specialized Agents
+        analyst = Agent(
             role='Neural Analyst',
-            goal=f'Analyze {topic} trends',
-            backstory="Elite data intelligence entity.",
-            llm=llm,
-            verbose=True
+            goal=f'Define core breakthroughs for {topic}',
+            backstory="Deep-level AI research entity.",
+            llm=llm, verbose=True
         )
 
         architect = Agent(
-            role='System Designer',
-            goal=f'Create blueprint for {topic}',
-            backstory="Master of technical architecture.",
-            llm=llm,
-            verbose=True
+            role='System Architect',
+            goal=f'Design a roadmap for {topic}',
+            backstory="Senior technical logic engine.",
+            llm=llm, verbose=True
         )
 
-        # TASKS
-        t1 = Task(description=f"Identify 3 breakthroughs in {topic}.", agent=researcher, expected_output="3 bullet points.")
-        t2 = Task(description="Create a technical roadmap.", agent=architect, expected_output="Markdown roadmap.")
+        # Tasks
+        t1 = Task(description=f"Identify 3 key trends in {topic}.", agent=analyst, expected_output="List of 3 insights.")
+        t2 = Task(description="Build a high-level technical roadmap.", agent=architect, expected_output="Markdown Roadmap.")
 
-        # EXECUTION
-        with st.status("🚀 SWARM ACTIVE: COLLABORATING...", expanded=True) as status:
-            crew = Crew(agents=[researcher, architect], tasks=[t1, t2], process=Process.sequential)
-            result = crew.kickoff()
-            status.update(label="✅ TASK COMPLETED!", state="complete")
+        # Swarm Execution
+        with st.status("🚀 COLLABORATING...", expanded=True) as status:
+            swarm = Crew(agents=[analyst, architect], tasks=[t1, t2], process=Process.sequential)
+            result = swarm.kickoff()
+            status.update(label="✅ EXECUTION COMPLETE", state="complete")
 
-        st.subheader("📡 FINAL INTELLIGENCE REPORT:")
+        st.subheader("📡 AGENT OUTPUT REPORT:")
         st.markdown(result)
 
     except Exception as e:
-        st.error(f"❌ SYSTEM CRITICAL ERROR: {str(e)}")
+        st.error(f"❌ SYSTEM ERROR: {str(e)}")
