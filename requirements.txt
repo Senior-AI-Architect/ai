@@ -1,4 +1,4 @@
 crewai
 langchain_openai
 duckduckgo-search
-python-dotenv
+streamlit
