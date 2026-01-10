@@ -3,79 +3,61 @@ import os
 from crewai import Agent, Task, Crew, Process
 from langchain_openai import ChatOpenAI
 
-# --- 1. CONFIGURATION ---
-# Aapne kaha ke key andar hi hai, isliye yahan direct define kar di hai
-os.environ["OPENAI_API_KEY"] = "sk-proj-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx" # Apni asli key yahan lazmi check karein
+# --- CONFIGURATION ---
+# Apni BILKUL SAHI key yahan single quotes ke andar paste karein
+os.environ["OPENAI_API_KEY"] = "PASTE_YOUR_CORRECT_KEY_HERE"
 
 st.set_page_config(page_title="AI Swarm OS", page_icon="🤖", layout="wide")
 
-# UI Styling
+# Futuristic UI
 st.markdown("""
     <style>
-    .main { background-color: #050b14; color: #00f2ff; }
-    .stButton>button { width: 100%; background: linear-gradient(45deg, #0891b2, #06b6d4); color: white; border: none; }
+    .main { background-color: #050b14; color: #00f2ff; font-family: 'Courier New', monospace; }
+    .stTextInput>div>div>input { background-color: #0a192f; color: #00f2ff; border: 1px solid #00f2ff; }
+    .stButton>button { background: linear-gradient(45deg, #0891b2, #06b6d4); color: white; font-weight: bold; border-radius: 5px; }
     </style>
     """, unsafe_allow_html=True)
 
 st.title("🤖 [PROJECT_BETA]: AGENT_SWARM_OS")
-st.write("Autonomous Multi-Agent Collaboration Engine")
+st.write("---")
 
-# --- 2. INPUT ---
-topic = st.text_input("Enter Swarm Objective", value="Next-Gen AI Agentic Workflows 2026")
+# Input Objective
+topic = st.text_input("ENTER SYSTEM OBJECTIVE:", value="Advanced Multi-Agent Collaboration 2026")
 
-if st.button("🚀 Initialize Swarm"):
+if st.button("EXECUTE SWARM"):
     try:
-        # LLM Setup (GPT-4o-mini for extreme speed)
+        # GPT-4o-mini extreme speed ke liye
         llm = ChatOpenAI(model_name="gpt-4o-mini", temperature=0.7)
 
-        # Agent 1: Neural Researcher
+        # AGENTS (Using internal knowledge for speed)
         researcher = Agent(
-            role='Neural Research Analyst',
-            goal=f'Analyze the most critical breakthroughs in {topic}',
-            backstory="You are an elite AI analyst. You don't need the web; you have a massive internal database of technical knowledge.",
+            role='Neural Analyst',
+            goal=f'Analyze {topic} trends',
+            backstory="Elite data intelligence entity.",
             llm=llm,
-            verbose=True,
-            allow_delegation=False
+            verbose=True
         )
 
-        # Agent 2: System Architect
         architect = Agent(
-            role='System Architect',
-            goal=f'Design a professional technical roadmap for {topic}',
-            backstory="You take complex analysis and turn it into actionable, world-class system designs.",
+            role='System Designer',
+            goal=f'Create blueprint for {topic}',
+            backstory="Master of technical architecture.",
             llm=llm,
-            verbose=True,
-            allow_delegation=False
+            verbose=True
         )
 
-        # --- 3. TASKS ---
-        research_task = Task(
-            description=f"Identify top 5 technical trends in {topic}. Focus on scalability.",
-            expected_output="A list of 5 deeply technical insights.",
-            agent=researcher
-        )
+        # TASKS
+        t1 = Task(description=f"Identify 3 breakthroughs in {topic}.", agent=researcher, expected_output="3 bullet points.")
+        t2 = Task(description="Create a technical roadmap.", agent=architect, expected_output="Markdown roadmap.")
 
-        design_task = Task(
-            description=f"Based on research, create a high-level architecture and a 6-month execution roadmap.",
-            expected_output="A structured Markdown report with 'Architecture' and 'Roadmap' sections.",
-            agent=architect
-        )
-
-        # --- 4. EXECUTION ---
-        with st.status("🛠️ Swarm active: Agents are collaborating...", expanded=True) as status:
-            st.write("📡 Neural Researcher is analyzing patterns...")
-            crew = Crew(
-                agents=[researcher, architect],
-                tasks=[research_task, design_task],
-                process=Process.sequential
-            )
+        # EXECUTION
+        with st.status("🚀 SWARM ACTIVE: COLLABORATING...", expanded=True) as status:
+            crew = Crew(agents=[researcher, architect], tasks=[t1, t2], process=Process.sequential)
             result = crew.kickoff()
-            status.update(label="✅ Swarm Intelligence Ready!", state="complete")
+            status.update(label="✅ TASK COMPLETED!", state="complete")
 
-        # --- 5. OUTPUT ---
-        st.divider()
-        st.subheader("📊 Final Intelligence Output")
+        st.subheader("📡 FINAL INTELLIGENCE REPORT:")
         st.markdown(result)
-        
+
     except Exception as e:
-        st.error(f"System Error: {str(e)}")
+        st.error(f"❌ SYSTEM CRITICAL ERROR: {str(e)}")
