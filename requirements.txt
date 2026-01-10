@@ -1,6 +1,4 @@
-crewai
+crewai==0.28.8
 langchain-openai
-langchain-community
-duckduckgo-search==5.3.0
 streamlit
 setuptools
