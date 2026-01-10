@@ -1,21 +1,63 @@
-// Project 02: Agent Swarm OS
-  p2: `
-        <div class="mb-4 overflow-hidden border border-cyan-900 rounded shadow-[0_0_10px_#0891b2]">
-            <img src="agent_swarm.gif" onerror="this.src='https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExNHJueXF4ZzRueXF4ZzRueXF4ZzRueXF4ZzRueXF4ZzRueXF4ZzRueXF4JmVwPXYxX2ludGVybmFsX2dpZl9ieV9pZCZjdD1n/3o7TKMGpxx6B830Kuk/giphy.gif'" class="w-full h-full object-cover opacity-80">
-        </div>
-        <h3 class="text-cyan-400 mb-2">[PROJECT_BETA]: AGENT_SWARM_OS</h3>
-        <div class="bg-cyan-950/30 p-3 border-l-2 border-cyan-500 rounded-r mb-3">
-            <p class="text-[11px] text-gray-300 mb-2">
-                Developed a decentralized Multi-Agent system using CrewAI. Features autonomous 
-                collaboration between specialized Neural Researcher and System Architect agents 
-                to automate complex technical workflows and roadmapping.
-            </p>
-            <p class="text-xs font-bold text-cyan-300">TECH: CrewAI, LangChain, GPT-4o, DuckDuckGo-API, Python</p>
-        </div>
-        <div class="flex justify-between items-center mt-4">
-            <span class="text-[10px] text-gray-400 font-mono">STATUS: STABLE_BETA_V1</span>
-            <a href="YOUR_GITHUB_REPO_LINK" target="_blank" class="bg-cyan-700/50 hover:bg-cyan-600 px-3 py-1 text-[10px] font-bold border border-cyan-400 rounded transition-all text-center no-underline inline-block text-cyan-100">
-                VIEW_SOURCE
-            </a>
-        </div>
-    `,
+import streamlit as st
+import os
+from crewai import Agent, Task, Crew, Process
+from langchain_openai import ChatOpenAI
+from langchain_community.tools import DuckDuckGoSearchRun
+
+# Page Config
+st.set_page_config(page_title="AI Swarm OS", page_icon="🤖", layout="wide")
+
+st.title("🤖 [PROJECT_BETA]: AGENT_SWARM_OS")
+st.write("Autonomous Multi-Agent Collaboration Engine")
+
+# Sidebar for API Key
+with st.sidebar:
+    st.header("Configuration")
+    # Yahan user apni key daal sakega
+    user_key = st.text_input("Enter OpenAI API Key", type="password")
+    topic = st.text_input("Research Topic", value="AI Agents in 2026")
+
+if st.button("Initialize Swarm"):
+    if not user_key:
+        st.error("Please enter your OpenAI API Key!")
+    else:
+        # Key set karna
+        os.environ["OPENAI_API_KEY"] = user_key
+        
+        # Tools & LLM Initialize
+        search_tool = DuckDuckGoSearchRun()
+        llm = ChatOpenAI(model_name="gpt-4o", temperature=0.5)
+
+        # Agent 1: Researcher
+        researcher = Agent(
+            role='Neural Researcher',
+            goal=f'Uncover deep technical insights about {topic}',
+            backstory="Advanced AI entity designed for high-speed information synthesis.",
+            tools=[search_tool], 
+            llm=llm, 
+            verbose=True
+        )
+
+        # Agent 2: Architect
+        architect = Agent(
+            role='System Architect',
+            goal=f'Synthesize research into a technical blueprint for {topic}',
+            backstory="Senior logic engine that converts raw data into structured systems.",
+            llm=llm, 
+            verbose=True
+        )
+
+        # Tasks
+        t1 = Task(description=f"Research latest trends in {topic}.", agent=researcher, expected_output="List of 5 technical insights.")
+        t2 = Task(description=f"Create a technical roadmap based on research.", agent=architect, expected_output="A structured Markdown roadmap.")
+
+        # Execution
+        with st.status("🚀 Swarm in progress...", expanded=True) as status:
+            st.write("Agents are collaborating...")
+            crew = Crew(agents=[researcher, architect], tasks=[t1, t2], process=Process.sequential)
+            result = crew.kickoff()
+            status.update(label="✅ Swarm Tasks Completed!", state="complete")
+
+        # Result Display
+        st.subheader("Final Output")
+        st.markdown(result)
