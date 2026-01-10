@@ -4,119 +4,115 @@ import re
 from crewai import Agent, Task, Crew, Process
 from langchain_openai import ChatOpenAI
 
-# --- 1. SENIOR LEVEL ARCHITECTURE ---
+# --- 1. CORE ARCHITECTURE ---
 st.set_page_config(
-    page_title="Agent Swarm OS | Final Masterpiece",
+    page_title="Agent Swarm OS | Atomic Edition",
     page_icon="🤖",
     layout="wide"
 )
 
-# API Key Security Logic
+# Secure API Management
 if "OPENAI_API_KEY" in st.secrets:
     os.environ["OPENAI_API_KEY"] = st.secrets["OPENAI_API_KEY"]
 
-# --- 2. FORENSIC UI STYLING (ZERO-GAP) ---
+# --- 2. FORENSIC UI STYLING (THE PERFECT LOOK) ---
 st.markdown("""
     <style>
-    /* Remove default Streamlit padding */
-    .block-container { padding: 1.5rem 5rem !important; }
+    /* Spacing & Width Optimization */
+    .block-container { padding: 1rem 5rem !important; }
     
-    /* Professional Report Typography */
+    /* Elegant Report Card */
     .report-card {
         background: #ffffff;
         border: 1px solid #e2e8f0;
         border-radius: 12px;
         padding: 30px 45px;
         color: #1e293b;
-        line-height: 1.45 !important;
+        line-height: 1.5 !important;
         font-size: 15px;
-        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+        box-shadow: 0 4px 6px rgba(0,0,0,0.03);
     }
     
-    /* Global Spacing Fixes */
-    h1, h2, h3 { margin-top: 12px !important; margin-bottom: 8px !important; color: #0f172a; }
-    p, li { margin-bottom: 5px !important; margin-top: 0px !important; }
-    ul, ol { margin-top: 5px !important; margin-bottom: 10px !important; }
+    /* Deep Spacing Fixes */
+    h1, h2, h3 { margin-bottom: 8px !important; margin-top: 15px !important; color: #0f172a; }
+    p, li { margin-bottom: 4px !important; }
     
-    /* Button & Input Polish */
-    .stButton>button { border-radius: 8px; font-weight: 600; background: #0f172a; color: white; border: none; }
-    .stTextInput>div>div>input { border-radius: 8px; border: 1px solid #cbd5e1; }
+    /* Button Style */
+    .stButton>button {
+        background: #0f172a;
+        color: white;
+        border-radius: 8px;
+        padding: 12px;
+        width: 100%;
+        font-weight: 600;
+    }
     </style>
     """, unsafe_allow_html=True)
 
-# --- 3. BACKEND DATA SANITIZER ---
-def sanitize_ai_output(raw_text):
-    """
-    Forensic cleaning: Removes markdown artifacts, fixes line breaks, 
-    and ensures the UI doesn't break.
-    """
-    text = str(raw_text)
-    # 1. Remove raw markdown identifiers found in screenshots
+# --- 3. BACKEND DATA CLEANER ---
+def scan_and_clean(raw_input):
+    """Deep cleaning of AI artifacts and excessive spacing"""
+    text = str(raw_input)
+    # Remove markdown block headers
     text = re.sub(r'```markdown', '', text)
     text = re.sub(r'```', '', text)
-    # 2. Fix excessive newlines for compact look
+    # Fix spacing issues
     text = re.sub(r'\n{3,}', '\n\n', text)
     return text.strip()
 
-# --- 4. MAIN INTERFACE ---
-st.markdown("<h1 style='text-align: center;'>🤖 Agent Swarm OS</h1>", unsafe_allow_html=True)
-st.markdown("<p style='text-align: center; color: #64748b; margin-top: -15px;'>Autonomous Multi-Agent Collaboration Engine</p>", unsafe_allow_html=True)
-st.divider()
+# --- 4. INTERFACE ---
+st.title("🤖 Agent Swarm OS")
+st.markdown("<p style='color: #64748b; margin-top:-15px;'>Forensic-Scanned Autonomous Orchestration</p>", unsafe_allow_html=True)
 
-# Input Dashboard
-objective = st.text_input("🎯 Define System Objective", placeholder="e.g., Tesla Market Expansion Strategy 2026")
+objective = st.text_input("🎯 Define Objective", placeholder="e.g., iPhone 16 Market Strategy")
 
-if st.button("🚀 EXECUTE NEURAL SWARM"):
+if st.button("🚀 EXECUTE SYSTEM"):
     try:
-        # High-Resolution LLM
+        # Senior Level LLM Config
         llm = ChatOpenAI(model_name="gpt-4o-mini", temperature=0.2)
 
-        # Agent Definition
+        # Agent Personas
         analyst = Agent(
-            role='Strategic Director',
-            goal=f'Deep technical and market analysis for {objective}',
-            backstory="Elite strategist with 15+ years experience in identifying market pivot points.",
+            role='Market Intelligence Lead',
+            goal=f'Analyze {objective} for 3 critical insights',
+            backstory="Senior Analyst at top consulting firm, specialized in data synthesis.",
             llm=llm,
             verbose=True,
-            allow_delegation=False # Performance lock
+            allow_delegation=False
         )
-
+        
         architect = Agent(
-            role='Technical Architect',
-            goal=f'Create a high-fidelity execution roadmap for {objective}',
-            backstory="Expert in converting complex data into scalable operational blueprints.",
+            role='Operational Architect',
+            goal=f'Draft a 12-month execution plan for {objective}',
+            backstory="Execution expert who turns data into structured roadmaps.",
             llm=llm,
             verbose=True,
             allow_delegation=False
         )
 
-        # Task Logic
-        t1 = Task(description=f"Analyze {objective}. Define 3 core pillars.", agent=analyst, expected_output="3 high-fidelity insights.")
-        t2 = Task(description="12-month tactical roadmap.", agent=architect, expected_output="Structured Markdown roadmap.")
+        # Scanned Tasks
+        t1 = Task(description=f"Analyze {objective}.", agent=analyst, expected_output="3 high-fidelity insights.")
+        t2 = Task(description="Build execution roadmap.", agent=architect, expected_output="Markdown formatted roadmap.")
 
-        # Swarm Orchestration
-        with st.status("🛠️ Deep Scanning & Reasoning...", expanded=True) as status:
-            crew = Crew(
+        # Atomic Execution
+        with st.status("🧠 Deep Reasoning...", expanded=True) as status:
+            swarm = Crew(
                 agents=[analyst, architect],
                 tasks=[t1, t2],
-                process=Process.sequential # Logical Handover
+                process=Process.sequential # Data flow integrity
             )
-            raw_result = crew.kickoff()
+            raw_result = swarm.kickoff()
             
-            # Backend Sanitization
-            final_report = sanitize_ai_output(raw_result)
-            status.update(label="✅ Swarm Intelligence Ready", state="complete")
+            # Sanitization
+            clean_output = scan_and_clean(raw_result)
+            status.update(label="✅ Scanned Intelligence Ready", state="complete")
 
-        # --- 5. RENDERED OUTPUT ---
+        # --- 5. OUTPUT ---
         st.subheader("📡 Intelligence Report")
         with st.container():
-            # Perfect spacing wrapper
             st.markdown('<div class="report-card">', unsafe_allow_html=True)
-            st.markdown(final_report) 
+            st.markdown(clean_output)
             st.markdown('</div>', unsafe_allow_html=True)
 
     except Exception as e:
-        st.error(f"System Critical Error: {str(e)}")
-
-else:
-    st.info("System Ready. Define an objective to initiate autonomous reasoning.")
+        st.error(f"Scan Error: {str(e)}")
