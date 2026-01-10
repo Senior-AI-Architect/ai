@@ -1,107 +1,146 @@
 import streamlit as st
 import os
+import time
 from crewai import Agent, Task, Crew, Process
 from langchain_openai import ChatOpenAI
 
-# --- 1. CONFIGURATION ---
+# --- 1. SYSTEM SETTINGS ---
 st.set_page_config(
-    page_title="Agent Swarm OS",
-    page_icon="🦾",
-    layout="wide" # Readable width ke liye
+    page_title="Agent Swarm OS | Enterprise Edition",
+    page_icon="🧠",
+    layout="wide"
 )
 
-# API Key Management (Secrets se connect karein ya yahan paste karein)
+# Professional Key Management
 if "OPENAI_API_KEY" in st.secrets:
     os.environ["OPENAI_API_KEY"] = st.secrets["OPENAI_API_KEY"]
 else:
-    os.environ["OPENAI_API_KEY"] = "sk-proj-YOUR_ACTUAL_KEY_HERE"
+    # Manual key input for testing (Only if secrets not set)
+    os.environ["OPENAI_API_KEY"] = "sk-proj-YOUR_KEY_HERE"
 
-# --- 2. CLEAN & READABLE UI STYLING ---
+# --- 2. ELITE MINIMALIST UI ---
 st.markdown("""
     <style>
-    /* Main Background */
-    .stApp { background-color: #f8fafc; color: #1e293b; }
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap');
     
-    /* Readable Content Container */
-    .report-box {
-        background-color: white;
-        padding: 40px;
-        border-radius: 12px;
+    html, body, [class*="css"] { font-family: 'Inter', sans-serif; background-color: #ffffff; }
+    
+    .main-header { font-size: 2.5rem; font-weight: 600; color: #0f172a; margin-bottom: 0.5rem; }
+    .sub-header { font-size: 1.1rem; color: #64748b; margin-bottom: 2rem; }
+    
+    /* Elegant Report Container */
+    .report-card {
+        background-color: #f8fafc;
         border: 1px solid #e2e8f0;
-        box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+        border-radius: 12px;
+        padding: 35px;
+        margin-top: 20px;
+        color: #1e293b;
         line-height: 1.8;
-        font-size: 16px;
-        color: #334155;
-        word-wrap: break-word;
-        white-space: pre-wrap;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.05);
     }
     
-    /* Button Styling */
+    /* Status Box */
+    .status-box {
+        background-color: #f1f5f9;
+        border-left: 4px solid #3b82f6;
+        padding: 15px;
+        margin: 10px 0;
+        font-size: 0.9rem;
+        color: #475569;
+    }
+    
     .stButton>button {
         background-color: #0f172a;
         color: white;
-        border-radius: 8px;
-        padding: 10px 24px;
-        font-weight: 600;
-        transition: 0.3s;
+        border-radius: 6px;
+        padding: 0.6rem 2rem;
+        font-weight: 500;
+        border: none;
+        width: 100%;
     }
-    .stButton>button:hover { background-color: #334155; border: none; }
     </style>
     """, unsafe_allow_html=True)
 
-st.title("🦾 [PROJECT_BETA]: AGENT_SWARM_OS")
-st.caption("Autonomous Collaboration of Strategy and Architecture Agents")
-st.write("---")
+# --- 3. HEADER ---
+st.markdown('<p class="main-header">🦾 Agent Swarm OS</p>', unsafe_allow_html=True)
+st.markdown('<p class="sub-header">Multi-Agent Orchestration for Enterprise-Grade Technical Roadmaps</p>', unsafe_allow_html=True)
 
-# --- 3. INPUT SECTION ---
-topic = st.text_input("Define Objective:", value="AI Agents Efficiency 2026")
+# --- 4. INPUT SECTION ---
+with st.container():
+    col1, col2 = st.columns([3, 1])
+    with col1:
+        objective = st.text_input("System Objective", value="Next-Gen Fintech Security Architecture 2026")
+    with col2:
+        st.write("##") # Spacer
+        run_button = st.button("Initialize Swarm")
 
-if st.button("🚀 Run Swarm Collaboration"):
-    try:
-        # LLM Initialization (Fast & High Logic)
-        llm = ChatOpenAI(model_name="gpt-4o-mini", temperature=0.3)
+# --- 5. EXECUTION ---
+if run_button:
+    if not os.environ.get("OPENAI_API_KEY"):
+        st.error("Missing API Credentials")
+    else:
+        try:
+            # High-Speed Reasoning Model
+            llm = ChatOpenAI(model_name="gpt-4o-mini", temperature=0.2)
 
-        # Agent 1: The Analyst (Specialized Research)
-        analyst = Agent(
-            role='Principal Technical Analyst',
-            goal=f'Define core technical breakthroughs for {topic}',
-            backstory="Expert in identifying high-impact patterns and system bottlenecks.",
-            llm=llm,
-            verbose=True,
-            allow_delegation=False # Performance boost
-        )
-
-        # Agent 2: The Architect (System Design)
-        architect = Agent(
-            role='Lead Systems Architect',
-            goal=f'Design a 6-month technical roadmap for {topic}',
-            backstory="Senior architect focused on scalability and modular design principles.",
-            llm=llm,
-            verbose=True,
-            allow_delegation=False
-        )
-
-        # Tasks
-        t1 = Task(description=f"Identify 3 key innovations in {topic}.", agent=analyst, expected_output="3 detailed technical insights.")
-        t2 = Task(description="Create a technical roadmap with milestones.", agent=architect, expected_output="Markdown formatted roadmap.")
-
-        # Swarm Orchestration
-        with st.status("🛠️ Swarm Active: Reasoning...", expanded=True) as status:
-            crew = Crew(
-                agents=[analyst, architect], 
-                tasks=[t1, t2], 
-                process=Process.sequential # Logical handoff
+            # Define Agents with High-Level Personas
+            analyst = Agent(
+                role='Strategic Research Lead',
+                goal=f'Extract 3 disruptive technical shifts for {objective}',
+                backstory="Ex-Gartner analyst specialized in emerging tech infrastructure.",
+                llm=llm,
+                verbose=True,
+                allow_delegation=False
             )
-            result = crew.kickoff()
-            status.update(label="✅ Analysis Complete", state="complete")
 
-        # --- 4. READABLE OUTPUT ---
-        st.subheader("📡 Final System Intelligence Report")
-        # Wrapper box for perfect readability
-        st.markdown(f'<div class="report-box">{result}</div>', unsafe_allow_html=True)
+            architect = Agent(
+                role='Senior Systems Architect',
+                goal=f'Design a scalable blueprint based on research for {objective}',
+                backstory="Specialist in modular cloud-native architectures and long-term roadmaps.",
+                llm=llm,
+                verbose=True,
+                allow_delegation=False
+            )
 
-    except Exception as e:
-        st.error(f"Error during orchestration: {str(e)}")
+            # Tasks with Explicit Expectations
+            t1 = Task(
+                description=f"Analyze {objective} and identify 3 critical trends.",
+                agent=analyst,
+                expected_output="Detailed list of 3 technical insights."
+            )
+            t2 = Task(
+                description="Create a structured 12-month roadmap with architecture milestones.",
+                agent=architect,
+                expected_output="Professional Markdown technical roadmap."
+            )
+
+            # Execution with "Thought Logs"
+            with st.status("🛠️ System Reasoning in Progress...", expanded=True) as status:
+                st.markdown('<div class="status-box">📡 Phase 1: Strategic Lead is analyzing core objective...</div>', unsafe_allow_html=True)
+                
+                # Crew Setup
+                swarm = Crew(
+                    agents=[analyst, architect],
+                    tasks=[t1, t2],
+                    process=Process.sequential # Ensures logical reasoning flow
+                )
+                
+                result = swarm.kickoff()
+                
+                st.markdown('<div class="status-box">🏗️ Phase 2: Architect is aligning findings with system design...</div>', unsafe_allow_html=True)
+                status.update(label="✅ Swarm Intelligence Generated", state="complete")
+
+            # --- 6. READABLE FINAL OUTPUT ---
+            st.divider()
+            st.markdown("### 📡 Final Intelligence Report")
+            st.markdown(f'<div class="report-card">{result}</div>', unsafe_allow_html=True)
+            
+            # Recruiter Tip: Mentioning why it took time
+            st.caption("Note: This autonomous report was generated through a sequential reasoning loop between two specialized AI agents.")
+
+        except Exception as e:
+            st.error(f"System Orchestration Error: {str(e)}")
 
 else:
-    st.info("System Ready. Enter an objective above to trigger the autonomous agents.")
+    st.info("The system is currently idle. Define an objective to begin autonomous collaboration.")
